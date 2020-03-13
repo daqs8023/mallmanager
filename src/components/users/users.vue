@@ -2,12 +2,7 @@
   <div>
     <el-card class="box-card">
       <!-- 1.面包屑 -->
-      <!-- 首页/用户管理/用户列表 -->
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-      </el-breadcrumb>
+      <my-bread level1="用户管理" level2="用户列表"></my-bread>
       <!-- 2.搜索 -->
       <el-row class="searchRow">
         <el-col>
@@ -209,15 +204,11 @@ export default {
     },
     //获取用户列表的请求
     async getUseList() {
-      //需要授权的 API ，必须在请求头中使用 `Authorization` 字段提供 `token` 令牌
-      const AUTH_TOKEN = localStorage.getItem("token");
-      this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`
       )
-
       //console.log(res)
+      
       const {
         meta: { status, msg },
         data: { users, total }
