@@ -278,8 +278,8 @@ export default {
           //发送删除请求  :id----> 用户id
           //1.data中找userId ---- 行不通
           //2.把userId以showDeleUserMsgBox参数传进来
-          const res = await this.$http.delete(`users/${userId}`);
-          console.log(res);
+          const res = await this.$http.delete(`users/${userId}`)
+          console.log(res)
 
           if (res.data.meta.status === 200) {
             this.pagenum = 1;
