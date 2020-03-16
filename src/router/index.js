@@ -46,7 +46,7 @@ const router =  new Router({
         {
           name:'goodsadd',
           path: '/goodsadd',
-          component:Goodsadd
+          component:GoodsAdd
         }
       ]
     }    
