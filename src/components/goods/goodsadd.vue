@@ -3,8 +3,7 @@
         <!-- 1.面包屑 -->
         <my-bread level1="商品管理" level2="商品列表"></my-bread>
         <!-- 提示 el-alert -->
-        <el-alert class="alert" title="天机商品信息" type="success" center show-icon>
-        </el-alert>
+        <el-alert class="alert" title="天机商品信息" type="success" center show-icon></el-alert>
         <!-- 步骤条 el-steps -->
         <el-steps :active="active" finish-status="success" simple style="margin-top: 20px">
             <el-step title="基本信息" ></el-step>
@@ -83,7 +82,7 @@
                 <el-tab-pane name="5" label="商品内容">
                     <el-form-item>
                         <!-- 表单元素 -->
-                        <el-button type="primary">添加商品</el-button>
+                        <el-button type="primary" @click="addGoods()">添加商品</el-button>
                         <!-- 富文本 -->
                         <quill-editor v-model="form.goods_introduce"></quill-editor>
                     </el-form-item>    
@@ -112,8 +111,8 @@ export default {
                 goods_number:'',
                 goods_weight:'',
                 goods_introduce:'',
-                pics:'',
-                attrs:''
+                pics:[],
+                attrs:[]
             },
             //级联选择器绑定的数据
             options:[],
@@ -168,7 +167,7 @@ export default {
                     item.attr_vals=
                     item.attr_vals.length === 0
                     ? [] : item.attr_vals.trim().split(',')
-                });
+                })
             }else if(this.active === '3'){
                 if(this.selectedOptions.length !== 3){
                     //提示
@@ -189,11 +188,48 @@ export default {
         handleRemove(file){
             console.log("移除----"+file)
             //file.response.data.tem_path 图片临时上传的路径
+            //先获取该图片的索引
+            //findIndex() 遍历 把符合条件的元素的索引进行返回
+            let Index = this.form.pics.findIndex((item) =>{
+                return item.pic === file.response.data.tem_path
+            })
+            this.form.pics.splice(Index,1)
         },
         handleSuccess(file){
             console.log("成功----"+file)
             //file.data.tem_path 图片临时上传的路径
+            this.form.pics.push({
+                pic:file.data.tmp_path
+            })
         },
+        //添加商品-发送请求
+        async addGoods(){
+            //在发请求之前 处理this.form中的未处理数据
+            this.form.goods_cat=this.selectedOptions.join(',')
+
+            //attrs[{attr_id:?,attr_vals:?}]
+            //动态参数数组
+            // 遍历+取值+ 放在一个新数组中
+            //console.log(this.arrDyparams)
+            let arr1=this.arrDyparams.map((item)=>{
+                return {attr_id:item.attr_id,attr_vals:item.attr_vals}
+            })
+            //console.log(arr1)
+
+            //静态参数数组
+            //console.log(this.arrStaticparams)
+            let arr2=this.arrStaticparams.map((item)=>{
+                return {attr_id:item.attr_id,attr_vals:item.attr_vals}
+            })
+            //console.log(arr2)
+
+            this.form.attrs=[...arr1,...arr2]
+
+            const res = await this.$http.get(`goods`,this.form)
+            //console.log(res)
+            //回到商品列表
+            this.$router.push({name:"goods"})
+        }
     }
 }
 </script>
