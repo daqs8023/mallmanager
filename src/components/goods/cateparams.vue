@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card>
     <!-- 1.面包屑 -->
     <my-bread level1="商品管理" level2="分类参数"></my-bread>
     <!-- 提示 el-alert -->
